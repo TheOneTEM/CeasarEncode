@@ -16,17 +16,45 @@ def CeasarCode(code: str, encode: bool, num) -> str:
     
     #decoding
     if not encode:
-        #manual decode
+        #auto decode
+        attempt=0
+        prev=[]
         for i in range(26):
-            print('Attempt ' + str(i+1) + ': ' + CeasarCode(code, True, i+1))
+            test=CeasarCode(code, True, i+1)
+            for word in words:
+                if word in test and test not in prev:
+                    attempt += 1
+                    print('Attempt '+str(attempt)+': '+test)
+                    DidItWork=input('Is it decoded? [(Y)es/(N)o]\n>')
+                    while DidItWork.lower()[0] not in 'yn':
+                        DidItWork=input('Input invalid. Is it decoded? [(Y)es/(N)o]\n>')
+                    if DidItWork.lower()[0] == 'y':
+                        return ('Decoding successful after '+str(attempt)+' attempts. Plaintext: '+ CeasarCode(code, True, i+1))
+                    elif DidItWork.lower()[0] == 'n':
+                        prev.append(test)
+                        continue
+                else:
+                    continue
+        continueManual=input('AI decoding failed. Continue with manual decoding?[(Y)es/(N)o]\n>')
+        while continueManual.lower()[0] not in 'yn':
+            continueManual=input('Input invalid. Continue with manual decoding?[(Y)es/(N)o]\n>')
+        if continueManual == 'n':
+            return 'Decoding failed: Manual decoding denied'
+        try:
+            del(DidItWork)
+        except:
+            DidItWork=''
+            #manual decode
+        for k in range(26):
+            print('Attempt ' + str(k+1) + ': ' + CeasarCode(code, True, k+1))
             DidItWork=input('Is it decoded? [(Y)es/(N)o]\n>')
             while DidItWork.lower()[0] not in 'yn':
                 DidItWork=input('Input invalid. Is it decoded? [(Y)es/(N)o]\n>')
             if DidItWork.lower()[0] == 'y':
-                return ('Decoding successful with '+str(i+1)+'attempts. Plaintext: '+ CeasarCode(code, True, i+1))
+                return ('Decoding successful after '+str(k+1)+' attempts. Plaintext: '+ CeasarCode(code, True, k+1))
             elif DidItWork.lower()[0] == 'n':
                 print('Continuing manual decoding.')
-        return 'Decoding failed.'
+        return 'Decoding failed: Automatic and manual decoding failed.'
 
     #encoding
     elif encode:
@@ -70,4 +98,4 @@ while True:
                 encode = False
                 break
     code=input('Input code:\n>')
-    print('Operation completed. Output: '+CeasarCode(code, encode, None))
+    print(CeasarCode(code, encode, None))
