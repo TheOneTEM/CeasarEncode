@@ -1,4 +1,5 @@
 #Ceasar cipher encoder/decoder
+from random import randint
 def CeasarCode(code: str, encode: bool, num) -> str:
     #reads words.txt
     from pathlib import Path
@@ -59,7 +60,9 @@ def CeasarCode(code: str, encode: bool, num) -> str:
     #encoding
     elif encode:
         if num == None:
-            num = input('Input amount of steps to shift:\n>')
+            num = input('Input amount of steps to shift (type "rand" for random number):\n>')
+            if num == 'rand':
+                num=randint(1,25)
             while type(num) is not int:
                 try:
                     num=int(num)
@@ -70,12 +73,16 @@ def CeasarCode(code: str, encode: bool, num) -> str:
         tempcode=''
         letters = 'abcdefghijklmnopqrstuvwxyz'
         codeletters = 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
+        punctuation = ",.!?'"
         for i in range(len(code)):
             if code[i] == ' ':
                 tempcode+=' '
                 continue
-            if letters.find(code[i]) == -1:
+            if letters.find(code[i]) == -1 and punctuation.find(code[i]) == -1:
                 tempcode+=' '
+                continue
+            if punctuation.find(code[i]) != -1:
+                tempcode += code[i]
                 continue
             tempcode+=codeletters[letters.find(code[i])+num]
         return tempcode
